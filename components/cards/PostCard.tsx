@@ -1,6 +1,7 @@
 import { formatDateString } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
+import DeletePost from "../forms/DeletePost";
 
 
 interface Props {
@@ -101,17 +102,22 @@ const PostCard = ({
                                 </Link>
                             )}
                         </div>
-                    </div>    
+                    </div>
                 </div>
-                {/* delete post */}
-                {/* show comment logogs */}
+                <DeletePost
+                    postId={JSON.stringify(id)}
+                    currentUserId={currentUserId}
+                    authorId={author.id}
+                    parentId={parentId}
+                    isComment={isComment}
+                />
 
             </div>
-           <div>
-           <p className="text-subtle-medium text-gray-1 mt-[15px]">
-                {formatDateString(createdAt)}
-            </p>
-           </div>
+            <div>
+                <p className="text-subtle-medium text-gray-1 mt-[15px]">
+                    {formatDateString(createdAt)}
+                </p>
+            </div>
             {!isComment && community && (
                 <Link
                     href={`/communities/${community.id}`}

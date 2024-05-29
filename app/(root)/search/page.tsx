@@ -4,9 +4,15 @@ import { currentUser } from "@clerk/nextjs";
 import { redirect } from 'next/navigation';
 import Image from "next/image";
 import UserCard from "@/components/cards/UserCard";
+import Searchbar from "@/components/shared/SearchBar";
+import Pagination from "@/components/shared/Pagination";
 
 
-async function Page() {
+async function Page({
+    searchParams,
+}: {
+    searchParams: { [key: string]: string | undefined };
+}) {
     const user = await currentUser();
 
     if (!user) return null;
@@ -18,8 +24,8 @@ async function Page() {
     //fetch users
     const result = await FetchUsers({
         userId: user.id,
-        searchString: '',
-        pageNumber: 1,
+        searchString: searchParams.q,
+        pageNumber: searchParams?.page ? +searchParams.page : 1,
         pageSize: 25
     });
     return (
@@ -27,7 +33,7 @@ async function Page() {
             <h1 className="head-text mb-10">
                 Search
             </h1>
-            {/* search bar  */}
+            <Searchbar routeType='search' />
             <div className="mt-14 flex flex-col">
                 {result.users.length === 0
                     ? (<p className="no-result">No User</p>)
@@ -45,6 +51,11 @@ async function Page() {
                         </>
                     )}
             </div>
+            <Pagination
+                path='search'
+                pageNumber={searchParams?.page ? +searchParams.page : 1}
+                isNext={result.isNext}
+            />
         </section>
     )
 }
